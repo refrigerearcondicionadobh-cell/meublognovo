@@ -1,5 +1,5 @@
 export default ({ env }) => {
-  const client = env('DATABASE_CLIENT', 'sqlite');
+  const client = env('DATABASE_CLIENT', env('NODE_ENV') === 'production' ? 'postgres' : 'sqlite');
 
   const connections = {
     sqlite: {
@@ -11,9 +11,9 @@ export default ({ env }) => {
     postgres: {
       connection: {
         connectionString: env('DATABASE_URL'),
-        ssl: env.bool('DATABASE_SSL', false) && {
+        ssl: env('NODE_ENV') === 'production' ? {
           rejectUnauthorized: false,
-        },
+        } : false,
       },
       pool: {
         min: env.int('DATABASE_POOL_MIN', 2),
