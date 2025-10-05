@@ -1,13 +1,42 @@
-module.exports = [
+export default [
   'strapi::errors',
-  // Removido o 'strapi::security' com CSP para simplificar e evitar conflitos.
-  // A segurança será gerenciada pelo CORS e outras camadas.
-  'strapi::security',
+  {
+    name: 'strapi::security',
+    config: {
+      contentSecurityPolicy: {
+        useDefaults: true,
+        directives: {
+          'connect-src': ["'self'", 'https:'],
+          'img-src': [
+            "'self'",
+            'data:',
+            'blob:',
+            'res.cloudinary.com', // Se usar Cloudinary
+            'strapi.io',
+            'market-assets.strapi.io',
+          ],
+          'media-src': [
+            "'self'",
+            'data:',
+            'blob:',
+            'res.cloudinary.com', // Se usar Cloudinary
+          ],
+          upgradeInsecureRequests: null,
+        },
+      },
+    },
+  },
   {
     name: 'strapi::cors',
     config: {
-      enabled: true,
-      origin: ['https://www.climatbh.com.br', 'https://climatbh.com.br', 'http://localhost:3000'],
+      origin: [
+        'https://www.climatbh.com.br',
+        'https://climatbh.com.br',
+        'http://localhost:3000',
+        'http://localhost:3001',
+        // Adicione aqui a URL do seu frontend no Render
+        // 'https://your-frontend-app.onrender.com'
+      ],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
       keepHeaderOnError: true,
@@ -21,5 +50,3 @@ module.exports = [
   'strapi::favicon',
   'strapi::public',
 ];
-
-
